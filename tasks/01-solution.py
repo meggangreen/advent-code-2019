@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import common
 
 """ Part 1 """
@@ -26,7 +25,6 @@ def calc_fuel_requirement_addl():
     return total
 
 
->>>>>>> 2ab6bf9e6b1e4adb85d81efffc20619ce1cc91e2
 def calc_fuel(mass):
     """ Recursive function to get the fuel needed for the mass of the fuel needed.
 
