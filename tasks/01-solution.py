@@ -1,12 +1,12 @@
+import common
+
 """ Part 1 """
-def calc_fuel_requirement(puzzle_input='01-input.txt'):
+def calc_fuel_requirement():
     # if mass < 6 ??
 
+    masses = common.listify_input_file('01-input.txt')
+
     total = 0
-
-    with open(puzzle_input) as file:
-        masses = file.readlines()
-
     for mass in masses:
         total += int(mass) // 3 - 2
 
@@ -14,21 +14,13 @@ def calc_fuel_requirement(puzzle_input='01-input.txt'):
 
 
 """ Part 2 """
-def get_modules(puzzle_input='01-input.txt'):
-
-    with open(puzzle_input) as file:
-        lines = file.readlines()
-
-    return [int(line) for line in lines]
-
-
 def calc_fuel_requirement_addl():
 
-    modules = get_modules()
+    modules = common.listify_input_file('01-input.txt')
 
     total = 0
     for module in modules:
-        total += calc_fuel(module)
+        total += calc_fuel(int(module))
 
     return total
 
@@ -55,4 +47,3 @@ def calc_fuel(mass):
     fuel += calc_fuel(fuel)
 
     return fuel
-
