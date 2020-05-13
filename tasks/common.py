@@ -4,7 +4,7 @@ def listify_input_file(puzzle_input):
     """ Returns a list of input from a multi-line file. """
 
     with open(puzzle_input) as file:
-        return file.readlines()
+        return file.read().strip().split('\n')
 
 
 def listify_input_string(puzzle_input):
