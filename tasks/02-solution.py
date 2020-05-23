@@ -83,7 +83,7 @@ def find_noun_verb(opcodes):
 #####
 if __name__ == '__main__':
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod()  # verbose=True
 
     # Part 1
     opcodes = [int(item) for item in common.listify_input_string('02-input.txt')]
