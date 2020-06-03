@@ -10,9 +10,9 @@
 # opcodes = list(map(int, opcodes))
 
 ### MMG
-    import common
-    opcodes = [int(item) for item in common.listify_input_string('05-input.txt')]
-    # part 2 answer 16694270
+import common
+opcodes = [int(item) for item in common.listify_input_string('05-input.txt')]
+# part 2 answer 16694270
 ###
 
 intput = 5
