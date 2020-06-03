@@ -27,7 +27,6 @@ params:  0  position -- value stored at position n
 """
 
 import common
-# from copy import deepcopy
 
 class Computer:
 
@@ -51,20 +50,20 @@ class Computer:
         i = 0 
         while i < len(program):
             opcode = self._get_opcode(i)
-            params = self._get_exe_params(i)
-            _, pmodes = self._extract_opcode_pmodes(program[i])
-
             # exit early
             if opcode == 99:
+                self.program = None
                 print("End of Line")
                 return
 
+            params = self._get_exe_params(i)
+
             if opcode == 1:
-                self._do_addition(params)
+                self.program[params[2]] = self.program[params[0]] + self.program[params[1]]
                 i += 4
 
             elif opcode == 2:
-                self._do_multiplication(params)
+                self.program[params[2]] = self.program[params[0]] * self.program[params[1]]
                 i += 4
 
             elif opcode == 3:
@@ -72,28 +71,40 @@ class Computer:
                 i += 2
 
             elif opcode == 4:
-                self._do_output(i, params)
+                print("\nInstruction:", i)
+                print("Value:", self.program[params[0]])
                 i += 2
                 
             elif opcode == 5:
-                self._do_
+                if self.program[params[0]] != 0:
+                    i = self.program[params[1]]
+                else:
+                    i += 3
+                
+            elif opcode == 6:
+                if self.program[params[0]] == 0:
+                    i = self.program[params[1]]
+                else:
+                    i += 3
+
+            elif opcode == 7:
+                if self.program[params[0]] < self.program[params[1]]:
+                    self.program[params[2]] = 1
+                else:
+                    self.program[params[2]] = 0
+                i += 4     
+
+            elif opcode == 8:
+                if self.program[params[0]] == self.program[params[1]]:
+                    self.program[params[2]] = 1
+                else:
+                    self.program[params[2]] = 0
+                i += 4
             
             else:
                 return "err: ", i
 
         return
-
-
-    def _do_addition(self, params):
-        """ Execute addition operation. """
-
-        self.program[params[2]] = self.program[params[0]] + self.program[params[1]]
-
-
-    def _do_multiplication(self, params):
-        """ Execute multiplication operation. """
-
-        self.program[params[2]] = self.program[params[0]] * self.program[params[1]]
 
 
     def _do_input(self, params):
@@ -113,20 +124,6 @@ class Computer:
 
         # Place result (pmodes[0] is always 0 for input)
         self.program[params[0]] = value0
-
-
-    def _do_output(self, i, params):
-        """ Prints output. """
-
-        # params = [self.program[i+1]]
-        value0 = self.program[params[0]]
-
-        # TODO - use string interpolation here
-        print("\nInstruction:", i)
-        print("Value:", value0)
-
-
-    # def _do_jump_if_true(self, i, pmodes):
 
 
     def _get_opcode(self, i):
@@ -175,5 +172,7 @@ if __name__ == '__main__':
     program = [int(item) for item in common.listify_input_string('05-input.txt')]
     comp = Computer()
     
-    # Part 1 -- starting input 1 for AC unit
-    comp.run_program(program)  # answer 16434972
+    # Part 1 -- starting input 1 for AC unit -- answer 16434972
+    # Part 2 -- starting input 5 for TRC -- answer 16694270
+    comp.run_program(program)  
+
