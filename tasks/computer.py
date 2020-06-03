@@ -84,11 +84,11 @@ class Computer:
         print("For the first input, enter the system ID:")
         print("    '1' for the Air Conditioner Unit")
         print("    '5' for the Thermal Radiator Controller")
+        print("    A single digit from 0 thru 4 for an Amplifier Phase Setting")
+        print("    An Amplifier Output Signal for an Amplifier Input Signal (or '0')")
         
         value = input("Input please: ")
-        if value not in '15':
-            # Raise error
-            pass
+        # TODO: Add try/except for int(value)
         value = int(value)
 
         self.program[params[0]] = value
