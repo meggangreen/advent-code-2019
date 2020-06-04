@@ -3,10 +3,11 @@ class Computer:
 
     def __init__(self):
         self.opcodes = [99, 1, 2, 3, 4, 5, 6, 7, 8]
+        # self.system  = system  #
         self.program = None
 
 
-    def run_program(self, program, noun=None, verb=None):
+    def run_program(self, program, noun=None, verb=None, inputs=[]):
         """ Runs the opcodes. """
 
         # Perform setup opertions
@@ -18,14 +19,14 @@ class Computer:
             self.program[2] = verb
 
         # Run each opcode
-        i = 0 
+        i, j = 0, 0  # i is the program index; j is the inputs index
         while i < len(program):
             opcode = self._get_opcode(i)
             # exit early
             if opcode == 99:
                 self.program = None
                 print("End of Line")
-                return
+                return output
 
             params = self._get_exe_params(i)
 
@@ -38,12 +39,17 @@ class Computer:
                 i += 4
 
             elif opcode == 3:
-                self._do_input(params)
+                if inputs:
+                    self.program[params[0]] = inputs[j]
+                    j += 1
+                else:
+                    self._do_input(params)
                 i += 2
 
             elif opcode == 4:
-                print("\nInstruction:", i)
-                print("Value:", self.program[params[0]])
+                # print("\nInstruction:", i)
+                output = self.program[params[0]]
+                print("Value:", output)
                 i += 2
                 
             elif opcode == 5:
@@ -91,7 +97,7 @@ class Computer:
         # TODO: Add try/except for int(value)
         value = int(value)
 
-        self.program[params[0]] = value
+        self.program[params[0]] = value  # self.system
 
 
     def _get_opcode(self, i):
