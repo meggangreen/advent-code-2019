@@ -47,9 +47,11 @@ class Computer:
                 i += 2
 
             elif opcode == 4:
+                # import pdb; pdb.set_trace()
                 # print("\nInstruction:", i)
                 output = self.program[params[0]]
-                print("Value:", output)
+                # print("Value:", output)
+                return output
                 i += 2
                 
             elif opcode == 5:
