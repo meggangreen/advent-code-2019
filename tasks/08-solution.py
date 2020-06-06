@@ -71,3 +71,12 @@ if __name__ == "__main__":
     rows = make_layers(decoded, 25, 1)
     for row in rows:
         print(row)
+    
+    """ EBZUR:
+        1111 111  1111 1  1 111
+        1    1  1    1 1  1 1  1
+        111  111    1  1  1 1  1
+        1    1  1  1   1  1 111
+        1    1  1 1    1  1 1 1
+        1111 111  1111  11  1  1
+    """
