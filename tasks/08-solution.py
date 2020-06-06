@@ -34,6 +34,24 @@ def find_layer_fewest_digit(layers, digit):
     return fewest
 
 
+def decode_image(layers):
+
+    decoded = layers[0]
+
+    for i, pixel in enumerate(decoded):
+        if pixel == '2':
+            decoded[i] = get_opaqe(layers[1:], i)
+
+    return decoded
+
+
+def get_opaqe(layers, i):
+
+    for layer in layers:
+        if layer[i] != '2':
+            return layer[i]
+
+
 ##########
 if __name__ == "__main__":
     import common
@@ -44,3 +62,5 @@ if __name__ == "__main__":
 
     # Part 1
     print("Part 1:", fewest_0.count('1') * fewest_0.count('2'))  # 1224
+
+    
