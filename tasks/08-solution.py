@@ -38,9 +38,12 @@ def decode_image(layers):
 
     decoded = list(layers[0])
 
-    for i, pixel in enumerate(decoded):
-        if pixel == '2':
+    for i, _ in enumerate(decoded):
+        if decoded[i] == '2':
             decoded[i] = get_opaqe(layers[1:], i)
+        
+        if decoded[i] == '0':
+            decoded[i] = ' '
 
     return ''.join(decoded)
 
