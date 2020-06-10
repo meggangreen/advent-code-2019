@@ -16,6 +16,7 @@ class Computer:
 
         self.program = program
         self.index = 0
+        self.rel_base = 0
         if noun is not None:
             self.program[1] = noun
         if verb is not None:
@@ -39,6 +40,7 @@ class Computer:
                 return None
 
             params = self._get_exe_params(opcode)
+            self._check_program_length(params)
 
             # Addition
             if opcode == 1:
@@ -96,7 +98,9 @@ class Computer:
                 self.index += 4
 
             # Jump relative base
-            # elif opcode == 9:
+            elif opcode == 9:
+                self.rel_base += self.program[params[0]]
+                self.index += 2
 
         return
 
@@ -143,17 +147,49 @@ class Computer:
 
         """
 
-        pmodes = [int(n) for n in list(str(self.program[self.index])[:-2])][::-1]
-        while len(pmodes) < 3:
-            pmodes.append(0)
+        modes = [int(n) for n in list(str(self.program[self.index])[:-2])][::-1]
+        while len(modes) < 3:
+            modes.append(0)
 
-        params = [None, None, None]
-        params[0] = self.index + 1 if pmodes[0] == 1 else self.program[self.index+1]
+        params = []
+
+        if opcode:
+            if modes[0] == 0:      # Relative mode
+                params.append(self.program[self.index+1])
+            elif modes[0] == 1:    # Immediate mode
+                params.append(self.index + 1)
+            elif modes[0] == 2:    # Relative mode
+                params.append(self.rel_base + self.program[self.index+1])
 
         if opcode in [1, 2, 5, 6, 7, 8]:
-            params[1] = self.index + 2 if pmodes[1] == 1 else self.program[self.index+2]
-        
+            if modes[1] == 0:      # Relative mode
+                params.append(self.program[self.index+2])
+            elif modes[1] == 1:    # Immediate mode
+                params.append(self.index + 2)
+            elif modes[1] == 2:    # Relative mode
+                params.append(self.rel_base + self.program[self.index+2])
+
         if opcode in [1, 2, 7, 8]:
-            params[2] = self.index + 1 if pmodes[2] == 1 else self.program[self.index+3]
+            if modes[2] == 0:      # Relative mode
+                params.append(self.program[self.index+3])
+            elif modes[2] == 1:    # Immediate mode
+                params.append(self.index + 1)
+            elif modes[2] == 2:    # Relative mode
+                params.append(self.rel_base + self.program[self.index+3])
 
         return params
+
+
+    def _check_program_length(self, params):
+        """ Checks the program length ("memory") is big enough. Calls method to
+            increase length if necessary.
+        """
+
+        for param in params:
+            current = len(self.program) - 1
+            if param > current:
+                self._extend_program_length(param - current)
+
+
+    def _extend_program_length(self, extension):
+        self.program += [0] * extension
