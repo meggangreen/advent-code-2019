@@ -95,6 +95,16 @@ def get_unique_slopes(orig, asteroids):
     return slopes
 
 
+def do_part_1():
+    """ Which asteroid can see the most other asteroids? """
+
+    graph = common.listify_input_file("10-input.txt")
+    asteroids = {asteroid: None for asteroid in make_asteroids(graph)}
+
+    for asteroid in asteroids:
+        asteroids[asteroid] = get_unique_slopes(asteroid, asteroids)
+
+    return len(max(asteroids.items(), key=lambda item: len(item[1]))[1])
 
 
 ##########
@@ -102,4 +112,6 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE)  # verbose=True
 
-    graph = common.listify_input_file("10-input.txt")
+# Part 1:
+print(f"Part 1: {do_part_1()}")
+
