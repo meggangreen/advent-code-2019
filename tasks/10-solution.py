@@ -15,6 +15,20 @@
 # big thing for me, in particular, to remember is we don't care *which* asteroid
 # on the slope we count, just that we count *only one*
 
+# PART 2 NOTES
+# - get all unique slopes once
+# - vaporize order is clockwise from 12; 
+#       ergo slope order is above -> R-largest to R-mallest -> 
+#                           below -> L-largest to L-smallest
+# - get unique slopes *with* asteroid's distance: slopes = {slope: [diff_x+diff_y*1j]}
+# - for each slope in slopes, sort asteroids lists farther-to-closer
+#       sorted([asteroids], key=lambda A: abs(A.real)+abs(A.imag), reverse=True)
+# - diff ways to fudge slope order
+# - vaporized = 0; while vaporized < 200, 
+#       for each slope in "ordered" slopes,
+#           target = slopes[slope].pop())
+#           vaporized += 1
+# 
 
 import common
 
@@ -113,5 +127,5 @@ if __name__ == "__main__":
     doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE)  # verbose=True
 
 # Part 1:
-print(f"Part 1: {do_part_1()}")
+print(f"Part 1: {do_part_1()}")  # answer 288 (17+22j)
 
