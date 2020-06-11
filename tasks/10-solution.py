@@ -7,6 +7,12 @@
 # looking at a ruby solution that followed my second thought: get the slope of
 # the line and cancel out other asteroids with that slope 
 
+# notes from studying a ruby solution (https://github.com/J-Swift/advent-of-code-2019/blob/master/day_10/part_1/solution.rb)
+# - it becomes important to note L and R sides of the asteroid for the slope
+# - for the same reason, it's important to note above or below when ast1.x == ast2.x
+# - other solutions talk about "floating point math"; is it necessary to keep as fraction (rational in ruby)?
+
+
 import common
 
 def make_asteroids(graph):
