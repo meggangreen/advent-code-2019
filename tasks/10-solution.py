@@ -39,8 +39,8 @@ def get_slope(orig, dest):
     """ Returns the complex slope (side-slope) of the line connecting two asteroids.
 
     Args:
-        orig (complex): an asteroid location as 'x+yj'
-        dest (complex): an asteroid location as 'x+yj'
+        orig (complex): an asteroid with location as 'x+yj'
+        dest (complex): an asteroid with location as 'x+yj'
 
     Returns:
         string: a string describing the orientation and slope of a line;
@@ -59,7 +59,7 @@ def get_slope(orig, dest):
 
     # slope is undefined (asteroids are in vertical path)
     if orig.real == dest.real:
-        return "above" if orig.imag < dest.imag else "below"
+        return "below" if orig.imag < dest.imag else "above"
 
     # dest is to R or L of orig
     side = "R" if orig.real < dest.real else "L"
@@ -68,12 +68,38 @@ def get_slope(orig, dest):
     return f"{side} {slope}"
 
 
+def get_unique_slopes(orig, asteroids):
+    """ Returns set of unique complex slopes from one origin asteroid to many
+        destination asteroids.
+
+    Args:
+        orig (complex): an asteroid with location as 'x+yj'
+        asteroids (iterable): iterable of many asteroids as complex numbers
+
+    Returns:
+        set: set of slopes as defined in `get_slope(o, d)`
+
+    >>> graph = [".#..#",".....","#####","....#","...##"]
+    >>> asteroids = make_asteroids(graph)
+    >>> slopes = get_unique_slopes(1+0j, asteroids)
+    >>> slopes == {'L -2.0', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0', 'below'}
+    True
+    """
+
+    slopes = set()
+
+    for dest in asteroids:
+        if orig != dest:
+            slopes.add(get_slope(orig, dest))
+
+    return slopes
+
 
 
 
 ##########
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()  # verbose=True
+    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE)  # verbose=True
 
     graph = common.listify_input_file("10-input.txt")
