@@ -109,6 +109,31 @@ def get_unique_slopes(orig, asteroids):
     return slopes
 
 
+def map_asteroids_distances_to_slopes(orig, asteroids):
+    """ Returns dict of all slopes and the distances to each asteroid along them.
+
+    Args:
+        orig (complex): asteroid coord
+        asteroids (iterable): many asteroid coords
+
+    Returns:
+        dict: key: slope as define in `get_slope(orig, dest)`;
+              val: list of x-y distances from orig as complex number
+    """
+
+    slopes = dict()
+
+    for dest in asteroids:
+        if orig != dest:
+            slope = get_slope(orig, dest)
+            distance = (dest.real - orig.real) + (dest.imag - orig.imag) * 1j
+            if not slopes[slope]:
+                slopes[slope] = []
+            slopes[slope].append(distance)
+
+    return slopes
+
+
 def do_part_1():
     """ Which asteroid can see the most other asteroids? """
 
