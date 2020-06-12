@@ -74,11 +74,11 @@ def get_slope(orig, dest):
 
     # slope is undefined (asteroids are in vertical path)
     if orig.real == dest.real:
-        return "Top" if orig.imag < dest.imag else "Neath"
+        return "Neath" if orig.imag < dest.imag else "Top"
 
     # dest is to R or L of orig
     side = "R" if orig.real < dest.real else "L"
-    slope = (dest.imag - orig.imag) / (dest.real - orig.real)
+    slope = (orig.imag - dest.imag) / -(orig.real - dest.real)
 
     return f"{side} {slope}"
 
@@ -97,7 +97,7 @@ def get_unique_slopes(orig, asteroids):
     >>> graph = [".#..#",".....","#####","....#","...##"]
     >>> asteroids = make_asteroids(graph)
     >>> slopes = get_unique_slopes(1+0j, asteroids)
-    >>> slopes == {'L -2.0', 'Top', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0'}
+    >>> slopes == {'L -2.0', 'Neath', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0'}
     True
     """
 
