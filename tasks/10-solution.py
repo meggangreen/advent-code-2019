@@ -128,7 +128,7 @@ def map_asteroids_distances_to_slopes(orig, asteroids):
         if orig != dest:
             slope = get_slope(orig, dest)
             distance = (dest.real - orig.real) + (dest.imag - orig.imag) * 1j
-            if not slopes[slope]:
+            if slope not in slopes:
                 slopes[slope] = []
             slopes[slope].append(distance)
 
