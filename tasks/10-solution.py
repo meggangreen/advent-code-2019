@@ -63,10 +63,10 @@ def get_slope(orig, dest):
                 'L 0.25' or 'R -3.0' are examples
 
     >>> get_slope(0, 3+2j)
-    'R 0.6666666666666666'
+    ('R', -0.6666666666666666)
 
     >>> get_slope(4-2j, -2+1j)
-    'L -0.5'
+    ('L', 0.5)
     """
     
     if orig == dest:
@@ -74,13 +74,13 @@ def get_slope(orig, dest):
 
     # slope is undefined (asteroids are in vertical path)
     if orig.real == dest.real:
-        return "Neath" if orig.imag < dest.imag else "Top"
+        return ("Neath", float('-inf')) if orig.imag < dest.imag else ("Top", float('inf'))
 
     # dest is to R or L of orig
     side = "R" if orig.real < dest.real else "L"
     slope = (orig.imag - dest.imag) / -(orig.real - dest.real)
 
-    return f"{side} {slope}"
+    return (side, slope)
 
 
 def get_unique_slopes(orig, asteroids):
@@ -97,7 +97,7 @@ def get_unique_slopes(orig, asteroids):
     >>> graph = [".#..#",".....","#####","....#","...##"]
     >>> asteroids = make_asteroids(graph)
     >>> slopes = get_unique_slopes(1+0j, asteroids)
-    >>> slopes == {'L -2.0', 'Neath', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0'}
+    >>> slopes == {('L', 2.0), ('R', -1.3333333333333333), ('R', 0.0), ('R', -0.6666666666666666), ('R', -1.0), ('R', -2.0), ('Neath', -inf)}
     True
     """
 
@@ -110,7 +110,7 @@ def get_unique_slopes(orig, asteroids):
     return slopes
 
 
-def map_asteroids_distances_to_slopes(orig, asteroids):
+def map_asteroids_to_slopes(orig, asteroids):
     """ Returns dict of all slopes and the distances to each asteroid along them.
 
     Args:
@@ -127,7 +127,6 @@ def map_asteroids_distances_to_slopes(orig, asteroids):
     for dest in asteroids:
         if orig != dest:
             slope = get_slope(orig, dest)
-            # distance = (dest.real - orig.real) + (dest.imag - orig.imag) * 1j
             if slope not in slopes:
                 slopes[slope] = []
             slopes[slope].append(dest)
@@ -137,23 +136,19 @@ def map_asteroids_distances_to_slopes(orig, asteroids):
 
 def vaporize_asteroids(monitor, asteroids):
 
-    slopes = map_asteroids_distances_to_slopes(monitor, asteroids)
+    slopes = map_asteroids_to_slopes(monitor, asteroids)
     for slope in slopes:
         if len(slopes[slope]) > 1:
             slopes[slope] = sorted(slopes[slope], key=lambda A: abs(A.real-monitor.real)+abs(A.imag-monitor.imag), reverse=True)
     ordered_slopes = sorted(slopes.keys(), reverse=True)
 
-    vaporized = 0
-    while vaporized < 200:
-        import pdb; pdb.set_trace()
-        for slope in ordered_slopes:
-            if slopes[slope]:
-                target = slopes[slope].pop()
-                vaporized += 1
+    vaporized = []
+    # import pdb; pdb.set_trace()
+    for slope in ordered_slopes:
+        if slopes[slope]:
+            vaporized.append(slopes[slope].pop())
 
-    # target = (target.real + monitor.real) + (target.imag + monitor.imag) * 1j
-
-    return target
+    return vaporized
 
 
 def do_part_1():
