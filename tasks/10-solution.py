@@ -95,6 +95,7 @@ def get_unique_slopes(orig, asteroids):
     Returns:
         set: set of slopes as defined in `get_slope(o, d)`
 
+    >>> inf = float('inf')
     >>> graph = [".#..#",".....","#####","....#","...##"]
     >>> asteroids = make_asteroids(graph)
     >>> slopes = get_unique_slopes(1+0j, asteroids)
