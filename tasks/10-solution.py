@@ -21,11 +21,12 @@
 #       ergo slope order is above -> R-largest to R-mallest -> 
 #                           below -> L-largest to L-smallest
 # x get unique slopes *with* asteroid's distance: slopes = {slope: [diff_x+diff_y*1j]}
-# - for each slope in slopes, sort asteroids lists farther-to-closer
+# x for each slope in slopes, sort asteroids lists farther-to-closer
 #       sorted([asteroids], key=lambda A: abs(A.real)+abs(A.imag), reverse=True)
-# - diff ways to fudge slope order
+# x diff ways to fudge slope order
 # - vaporized = 0; while vaporized < 200, 
 #       for each slope in "ordered" slopes,
+#           if slopes[slope]
 #           target = slopes[slope].pop())
 #           vaporized += 1
 # 
@@ -134,7 +135,22 @@ def map_asteroids_distances_to_slopes(orig, asteroids):
     return slopes
 
 
-def 
+def vaporize_asteroids(monitor, asteroids):
+
+    slopes = map_asteroids_distances_to_slopes(monitor, asteroids)
+    slopes = sorted([asteroids], key=lambda A: abs(A.real)+abs(A.imag), reverse=True)
+    ordered_slopes = sorted(slopes.keys())
+
+    vaporized = 0
+    while vaporized < 200:
+        for slope in ordered_slopes:
+            if slopes[slope]:
+                target = slopes[slope].pop()
+                vaporized += 1
+
+    target.real, target.imag = target.real + monitor.real, target.imag + monitor.imag
+
+    return target
 
 
 def do_part_1():
