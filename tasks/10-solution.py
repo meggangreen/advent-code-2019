@@ -32,6 +32,7 @@
 # 
 
 import common
+from operator import itemgetter
 
 def make_asteroids(graph):
     """ Makes a generator of asteroids in a graph.
@@ -140,10 +141,10 @@ def vaporize_asteroids(monitor, asteroids):
     for slope in slopes:
         if len(slopes[slope]) > 1:
             slopes[slope] = sorted(slopes[slope], key=lambda A: abs(A.real-monitor.real)+abs(A.imag-monitor.imag), reverse=True)
-    ordered_slopes = sorted(slopes.keys(), reverse=True)
+    ordered_slopes = list(slopes.keys())
+    ordered_slopes.sort(key=itemgetter(0,1), reverse=True)
 
     vaporized = []
-    # import pdb; pdb.set_trace()
     for slope in ordered_slopes:
         if slopes[slope]:
             vaporized.append(slopes[slope].pop())
@@ -163,6 +164,17 @@ def do_part_1():
     return len(max(asteroids.items(), key=lambda item: len(item[1]))[1])
 
 
+def do_part_2():
+    """ Which asteroid is the 200th to be vaporized? """
+
+    graph = common.listify_input_file("10-input.txt")
+    asteroids = list(make_asteroids(graph))
+    monitor = 17+22j  # answer from part 1
+    vaporized = vaporize_asteroids(monitor, asteroids)
+
+    return vaporized[199]
+
+
 ##########
 if __name__ == "__main__":
     import doctest
@@ -170,4 +182,5 @@ if __name__ == "__main__":
 
 # Part 1:
 print(f"Part 1: {do_part_1()}")  # answer 288 (17+22j)
+print(f"Part 2: {do_part_2()}")  # answer 616 (6+16j)
 
