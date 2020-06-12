@@ -97,7 +97,7 @@ def get_unique_slopes(orig, asteroids):
     >>> graph = [".#..#",".....","#####","....#","...##"]
     >>> asteroids = make_asteroids(graph)
     >>> slopes = get_unique_slopes(1+0j, asteroids)
-    >>> slopes == {'L -2.0', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0', 'below'}
+    >>> slopes == {'L -2.0', 'Neath', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0'}
     True
     """
 
