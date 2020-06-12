@@ -74,7 +74,7 @@ def get_slope(orig, dest):
 
     # slope is undefined (asteroids are in vertical path)
     if orig.real == dest.real:
-        return "Neath" if orig.imag < dest.imag else "Top"
+        return "Top" if orig.imag < dest.imag else "Neath"
 
     # dest is to R or L of orig
     side = "R" if orig.real < dest.real else "L"
@@ -97,7 +97,7 @@ def get_unique_slopes(orig, asteroids):
     >>> graph = [".#..#",".....","#####","....#","...##"]
     >>> asteroids = make_asteroids(graph)
     >>> slopes = get_unique_slopes(1+0j, asteroids)
-    >>> slopes == {'L -2.0', 'Neath', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0'}
+    >>> slopes == {'L -2.0', 'Top', 'R 0.0', 'R 0.6666666666666666', 'R 1.0', 'R 1.3333333333333333', 'R 2.0'}
     True
     """
 
@@ -127,10 +127,10 @@ def map_asteroids_distances_to_slopes(orig, asteroids):
     for dest in asteroids:
         if orig != dest:
             slope = get_slope(orig, dest)
-            distance = (dest.real - orig.real) + (dest.imag - orig.imag) * 1j
+            # distance = (dest.real - orig.real) + (dest.imag - orig.imag) * 1j
             if slope not in slopes:
                 slopes[slope] = []
-            slopes[slope].append(distance)
+            slopes[slope].append(dest)
 
     return slopes
 
@@ -138,17 +138,20 @@ def map_asteroids_distances_to_slopes(orig, asteroids):
 def vaporize_asteroids(monitor, asteroids):
 
     slopes = map_asteroids_distances_to_slopes(monitor, asteroids)
-    slopes = sorted([asteroids], key=lambda A: abs(A.real)+abs(A.imag), reverse=True)
-    ordered_slopes = sorted(slopes.keys())
+    for slope in slopes:
+        if len(slopes[slope]) > 1:
+            slopes[slope] = sorted(slopes[slope], key=lambda A: abs(A.real-monitor.real)+abs(A.imag-monitor.imag), reverse=True)
+    ordered_slopes = sorted(slopes.keys(), reverse=True)
 
     vaporized = 0
     while vaporized < 200:
+        import pdb; pdb.set_trace()
         for slope in ordered_slopes:
             if slopes[slope]:
                 target = slopes[slope].pop()
                 vaporized += 1
 
-    target.real, target.imag = target.real + monitor.real, target.imag + monitor.imag
+    # target = (target.real + monitor.real) + (target.imag + monitor.imag) * 1j
 
     return target
 
