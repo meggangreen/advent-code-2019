@@ -35,8 +35,8 @@ class Panel(object):
 
 
     def __repr__(self):
-        color = "white" if self.color = 1 else "black"
-        painted = "painted" if self.been_painted = True else "not painted"
+        color = "white" if self.color == 1 else "black"
+        painted = "painted" if self.been_painted == True else "not painted"
         return f"<Panel @ {self.coords} - {color} - {painted}>"
 
 
@@ -56,6 +56,22 @@ class Painter(Computer):
 
     def __repr__(self):
         return f"<Painter @ {self.coords} {self.orientations[0]}>"
+
+
+    def paint_all_panels(self):
+        while True:
+            self._register_panel()
+            curr_color = self._photograph_panel()
+
+            new_color, direction = self.run_program(inputs=[curr_color])
+            if new_color is None or direction is None:
+                print("End of Line")
+                return
+
+            if curr_color != new_color:
+                self._paint_panel(new_color)
+            self._turn(direction)
+            self._advance()
 
 
     def _turn(self, direction):
@@ -94,6 +110,10 @@ class Painter(Computer):
     def _paint_panel(self, color):
         self.panels[self.coords]._be_painted(color)
 
-    
-    
 
+##########
+if __name__ == "__main__":
+    program = [int(n) for n in common.listify_input_string('09-input.txt')]
+
+    painter = Painter()
+    painter.load_program(program=program)
