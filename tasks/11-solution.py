@@ -37,7 +37,7 @@ class Panel(object):
     def __repr__(self):
         color = "white" if self.color == 1 else "black"
         painted = "painted" if self.been_painted == True else "not painted"
-        return f"<Panel @ {self.coords} - {color} - {painted}>"
+        return f"<Panel @ {self.coords} - {color} - {painted} />"
 
 
     def _be_painted(self, color):
@@ -55,7 +55,7 @@ class Painter(Computer):
 
 
     def __repr__(self):
-        return f"<Painter @ {self.coords} {self.orientations[0]}>"
+        return f"<Painter @ {self.coords} {self.orientations[0]} />"
 
 
     def paint_all_panels(self):
@@ -113,7 +113,7 @@ class Painter(Computer):
 
 ##########
 if __name__ == "__main__":
-    program = [int(n) for n in common.listify_input_string('09-input.txt')]
+    program = [int(n) for n in common.listify_input_string('11-input.txt')]
 
     painter = Painter()
     painter.load_program(program=program)
