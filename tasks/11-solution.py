@@ -63,7 +63,8 @@ class Painter(Computer):
             self._register_panel()
             curr_color = self._photograph_panel()
 
-            new_color, direction = self.run_program(inputs=[curr_color])
+            new_color = self.run_program(inputs=[curr_color])
+            direction = self.run_program(inputs=[])
             if new_color is None or direction is None:
                 print("End of Line")
                 return
