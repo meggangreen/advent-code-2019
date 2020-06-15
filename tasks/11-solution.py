@@ -50,7 +50,7 @@ class Painter(Computer):
     def __init__(self):
         super().__init__()
         self.coords = 0+0j
-        self.orientations = ("^", ">", "v", "<")
+        self.orientations = "^>V<"
         self.panels = dict()
 
 
@@ -59,6 +59,7 @@ class Painter(Computer):
 
 
     def _turn(self, direction):
+        """ Shifts string of orientations left or right. """
 
         if direction == 0:
             self.orientations = self.orientations[3] + self.orientations[:3]
@@ -67,6 +68,7 @@ class Painter(Computer):
 
 
     def _advance(self):
+        """ Changes coordinates based on orientation; called after _turn. """
 
         if self.orientations[0] == "^":
             self.coords += 1j
@@ -76,3 +78,22 @@ class Painter(Computer):
             self.coords += 1
         elif self.orientations[0] == "<":
             self.coords += -1
+
+
+    def _register_panel(self):
+        """ Ensures panel is registered. """
+
+        if self.coords not in self.panels:
+            self.panels[self.coords] = Panel(self.coords)
+
+
+    def _photograph_panel(self):
+        return self.panels[self.coords].color
+
+
+    def _paint_panel(self, color):
+        self.panels[self.coords]._be_painted(color)
+
+    
+    
+
