@@ -1,5 +1,11 @@
 """ Day 11 """
 
+# This doesn't solve the puzzle. I used mberk for part 1 and wmute for part 2.
+# Without test data or a solution I can read more quickly/easily, it's difficult
+# to pinpoint where I've gone wrong. I miss SciYoshi's answers.
+# Part 1 answer: 2064
+# Part 2 answer: LPZKLGHR
+
 """ Notes
 
     - Painter is a Computer that paints
@@ -55,10 +61,11 @@ class Painter(Computer):
 
 
     def __repr__(self):
-        return f"<Painter @ {self.coords} {self.orientations[0]} />"
+        return f"<Painter @ {self.coords} '{self.orientations[0]}' />"
 
 
     def paint_all_panels(self):
+        # import pdb; pdb.set_trace()
         while True:
             self._register_panel()
             curr_color = self._photograph_panel()
