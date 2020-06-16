@@ -8,8 +8,6 @@
 import common
 from computer import Computer
 
-TEST_PROG_1 = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
-
 ##########
 if __name__ == "__main__":
     program = [int(n) for n in common.listify_input_string('09-input.txt')]
@@ -19,7 +17,7 @@ if __name__ == "__main__":
     comp.load_program(program=program)
     print(f"\nPart 1: {comp.run_program(inputs=[1])}")
 
-    # Part 2
+    # Part 2 -- answer 63441
     comp = Computer()
     comp.load_program(program=program)
     print(f"\nPart 2: {comp.run_program(inputs=[2])}")
