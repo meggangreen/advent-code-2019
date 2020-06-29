@@ -3,29 +3,40 @@ class Computer:
 
     def __init__(self):
         self.opcodes = [99, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        self.inputs  = []
+        self.system = None
         self.program = None
+        self.inputs  = None
+        self.outputs = None
 
 
     def __repr__(self):
+        if 'game' in self.system:
+            if self.outputs:
+                self._render_screen()
+
         return f"<Comp inputs: {self.inputs}; >"
 
 
-    def load_program(self, program, noun=None, verb=None, system=None):
+    def load_program(self, program, noun=None, verb=None, system=None, inputs=[]):
         """ Performs the setup operations. """
 
         self.program = program
         self.index = 0
         self.rel_base = 0
+        self.inputs = []
+        self.outputs = []
         if noun is not None:
             self.program[1] = noun
         if verb is not None:
             self.program[2] = verb
-        if system is not None:
+        if 'game' in system:
+            self.system = system
+        elif system is not None:
             self.inputs.append(system)
+        self.inputs += inputs
 
 
-    def run_program(self, inputs):
+    def run_program(self, inputs=[]):
         """ Runs the opcodes. """
 
         self.inputs += inputs
@@ -37,6 +48,8 @@ class Computer:
             if opcode == 99:
                 # self.program = None
                 # print("End of Line")
+                if 'game' in self.system:
+                    self._render_screen()
                 return None
 
             params = self._get_exe_params(opcode)
@@ -54,10 +67,14 @@ class Computer:
 
             # Input
             elif opcode == 3:
-                if inputs:
+                if self.inputs:
                     self.program[params[0]] = self.inputs.pop(0)
+                elif self.system == "game-auto":
+                    self.program[params[0]] = self._get_game_auto_input()
+                elif self.system == "game-manual":
+                    self.program[params[0]] = self._get_game_joystick_input()
                 else:
-                    self._do_input(params)
+                    self.program[params[0]] = self._get_regular_input(params)
                 self.index += 2
 
             # Output
@@ -65,7 +82,12 @@ class Computer:
                 output = self.program[params[0]]
                 # print(f"Opcode 4 outputting {output}")
                 self.index += 2
-                return output
+                self.outputs.append(output)
+
+                # # !Important! 
+                # # Previous days' solutions require the output to be returned!
+                # # Not required for: 13
+                # return output
                 
             # Jump index not equal to zero ("if true")
             elif opcode == 5:
@@ -105,7 +127,7 @@ class Computer:
         return
 
 
-    def _do_input(self, params):
+    def _get_regular_input(self, params):
         """ Asks user for input. """
         
         print("For the first input, enter the system ID:")
@@ -118,7 +140,7 @@ class Computer:
         # TODO: Add try/except for int(value)
         value = int(value)
 
-        self.program[params[0]] = value  # system
+        return value  # system
 
 
     def _get_opcode(self):
@@ -193,3 +215,79 @@ class Computer:
 
     def _extend_program_length(self, extension):
         self.program += [0] * extension
+
+
+    def _get_game_auto_input(self):
+
+        snapshot = self._parse_game_progression()
+
+        if snapshot['ball'].real < snapshot['paddle'].real:
+            action = -1
+        elif snapshot['ball'].real > snapshot['paddle'].real:
+            action = 1
+        else:
+            action = 0
+
+        return action
+    
+    
+    def _get_game_joystick_input(self):
+        """ Asks user for to move joystick L (-1), R (1), or to stay (0). """
+
+        self._render_screen()
+        
+        directions = {'L': -1, 'S': 0, 'R': 1}
+        
+        print("Joystick Input:")
+        print("    <-- L -- S -- R -->")
+        print("    Enter 'L' for Left; 'S' to Stay, 'R' for Right")
+        choice = input(">>> ").upper()
+
+        if choice not in ['L', 'S', 'R']:
+            choice = 'S'
+            print("Invalid input. Staying put.")
+        
+        return directions[choice]
+
+
+    def _parse_game_progression(self):
+
+        snapshot = {"score": 0, "ball": -1-1j, "paddle": -1-1j}
+
+        t = 2
+        while t < len(self.outputs):
+            x = self.outputs[t-2]
+            y = self.outputs[t-1]
+            info = self.outputs[t]
+            if x == -1 and y == 0:
+                snapshot['score'] = info
+            else:
+                coord = x + y * 1j
+                snapshot[coord] = info
+                if info == 4:
+                    snapshot['ball'] = coord
+                if info == 3:
+                    snapshot['paddle'] = coord
+            t += 3
+        
+        return snapshot
+
+
+    def _render_screen(self):
+        
+        snapshot = self._parse_game_progression()
+
+        coords = list(filter(lambda c: type(c) == complex, snapshot.keys()))
+        max_x = max([int(c.real) for c in coords])
+        max_y = max([int(c.imag) for c in coords])
+
+        for y in range(max_y+1):
+            print("\n", end='')
+            for x in range(max_x+1):
+                coord = x + y * 1j
+                tile = snapshot.get(coord, 0)
+                tile = tile if tile != 0 else ' '
+                print(tile, end='')
+        
+        print(f"\n\nScore: {snapshot['score']}\n")
+
