@@ -281,13 +281,16 @@ class Computer:
         max_x = max([int(c.real) for c in coords])
         max_y = max([int(c.imag) for c in coords])
 
+        visualization = []
         for y in range(max_y+1):
-            print("\n", end='')
+            visualization.append("\n")
             for x in range(max_x+1):
                 coord = x + y * 1j
                 tile = snapshot.get(coord, 0)
                 tile = tile if tile != 0 else ' '
-                print(tile, end='')
+                visualization.append(f"{tile}")
         
-        print(f"\n\nScore: {snapshot['score']}\n")
+        visualization.append(f"\n\nScore: {snapshot['score']}\n")
+
+        print(''.join(visualization))
 
