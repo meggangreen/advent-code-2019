@@ -1,8 +1,10 @@
 """ Following https://realpython.com/python-print/#building-console-user-interfaces """
-import curses
+
+import curses, time
 
 def main(screen):
-    pass
+    curses.curs_set(0)  # Hide the cursor
+    time.sleep(1)
 
 
 ##########
