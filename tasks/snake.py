@@ -1,20 +1,24 @@
 """ Following https://realpython.com/python-print/#building-console-user-interfaces """
 
-import curses, time
+import curses
+# from curses import ascii
+import time
 
 def main(screen):
+    quitting = False
     curses.curs_set(0)      # Hide the cursor
     screen.nodelay(True)    # Don't block I/O calls
 
     directions = {curses.KEY_UP: (-1, 0),
                   curses.KEY_DOWN: (1, 0),
                   curses.KEY_LEFT: (0, -1),
-                  curses.KEY_RIGHT: (0, 1)}
+                  curses.KEY_RIGHT: (0, 1),
+                  113: 'quit'}              # q
 
     direction = directions[curses.KEY_RIGHT]
     snake = [(0, i) for i in reversed(range(20))]
     
-    while True:
+    while direction != 'quit':
         screen.erase()
 
         # Draw the snake
@@ -26,11 +30,11 @@ def main(screen):
         snake.pop()
         snake.insert(0, tuple(map(sum, zip(snake[0], direction))))
 
-        # Change direction on arrow keystroke
+        # Change direction or quit on arrow keystroke
         direction = directions.get(screen.getch(), direction)
 
         screen.refresh()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
 
 ##########
