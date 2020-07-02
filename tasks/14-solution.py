@@ -123,8 +123,6 @@ def calc_fuel_given_ore(ore, recipes):
             lower_bound = guess
     
     return lower_bound
-    
-
 
 
 ##########
